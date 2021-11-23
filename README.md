@@ -19,7 +19,7 @@ on:
 
 jobs:
   npm-publish:
-    uses: devshareacademy/shared-workflows/.github/workflows/publish-package.yml@main
+    uses: devshareacademy/shared-workflows/.github/workflows/publish-package.yml@v1.0.0
     secrets:
       npm_token: ${{ secrets.NPM_TOKEN }}
       gh_token: ${{ secrets.GH_TOKEN }}
