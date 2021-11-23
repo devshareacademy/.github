@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
   workflow_call:
     secrets:
-      NPM_TOKEN:
+      npm_token:
         required: true
-      GH_TOKEN:
+      gh_token:
         required: true
 
 jobs:
@@ -36,11 +36,11 @@ jobs:
 
       - name: publish to npm
         run: |
-          npm set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+          npm set //registry.npmjs.org/:_authToken ${{ secrets.npm_token }}
           npm run publish:npm
 
       - name: publish to github
         run: |
           npm config set registry https://npm.pkg.github.com
-          npm set //npm.pkg.github.com/:_authToken ${{ secrets.GH_TOKEN }}
+          npm set //npm.pkg.github.com/:_authToken ${{ secrets.gh_token }}
           npm run publish:github
