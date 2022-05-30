@@ -16,12 +16,13 @@ jobs:
       fail-fast: true
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16.x"
+          cache: 'npm'
 
       - run: git config user.email "scottwestover2006@gmail.com"
       - run: git config user.name "@github-ci"
@@ -30,16 +31,19 @@ jobs:
       - run: git push
       - run: git push --follow-tags
 
+      - name: install project dependencies
+        run: yarn install --frozen-lockfile
+
       - name: build project
-        run: npm run build
+        run: yarn build
 
       - name: publish to npm
         run: |
           npm set //registry.npmjs.org/:_authToken ${{ secrets.npm_token }}
-          npm run publish:npm
+          yarn publish:npm
 
       - name: publish to github
         run: |
           npm config set registry https://npm.pkg.github.com
           npm set //npm.pkg.github.com/:_authToken ${{ secrets.gh_token }}
-          npm run publish:github
+          yarn publish:github
