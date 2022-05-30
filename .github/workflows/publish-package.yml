@@ -30,6 +30,9 @@ jobs:
       - run: git push
       - run: git push --follow-tags
 
+      - name: build project
+        run: npm run build
+
       - name: publish to npm
         run: |
           npm set //registry.npmjs.org/:_authToken ${{ secrets.npm_token }}
