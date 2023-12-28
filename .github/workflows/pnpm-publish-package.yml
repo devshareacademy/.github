@@ -1,0 +1,53 @@
+name: Publish NPM Package
+
+on:
+  workflow_call:
+    secrets:
+      npm_token:
+        required: true
+      gh_token:
+        required: true
+
+jobs:
+  npm-publish:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+
+      - name: install project dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: build project
+        run: pnpm build
+
+      - run: git config user.email "scottwestover2006@gmail.com"
+      - run: git config user.name "@github-ci"
+      - run: pnpm version --patch --message "Bump version to %s"
+
+      - run: git push
+      - run: git push --follow-tags
+
+      - name: publish to npm
+        run: |
+          npm set //registry.npmjs.org/:_authToken ${{ secrets.npm_token }}
+          pnpm publish:npm
+
+      - name: publish to github
+        run: |
+          npm config set registry https://npm.pkg.github.com
+          npm set //npm.pkg.github.com/:_authToken ${{ secrets.gh_token }}
+          pnpm publish:github
