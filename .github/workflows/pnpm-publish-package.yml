@@ -36,7 +36,7 @@ jobs:
 
       - run: git config user.email "scottwestover2006@gmail.com"
       - run: git config user.name "@github-ci"
-      - run: pnpm version --patch --message "Bump version to %s"
+      - run: pnpm version patch --message "Bump version to %s"
 
       - run: git push
       - run: git push --follow-tags
